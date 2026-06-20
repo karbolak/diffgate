@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+
+title: DiffGate
+
+message: >
+  If you use DiffGate in research,
+  please cite the software using the metadata below.
+
+type: software
+
+authors:
+  - family-names: Karbowski
+    given-names: Kajetan
+
+version: 0.1.0
+
+date-released: 2026-01-01
+
+license: MIT
+
+repository-code: https://github.com/karbolak/diffgate
+
+keywords:
+  - diffusion models
+  - stable diffusion
+  - image generation
+  - quality estimation
+  - trajectory analysis
+  - selective continuation
+  - early abortion
+  - uncertainty estimation
