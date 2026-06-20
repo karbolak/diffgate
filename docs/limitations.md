@@ -2,20 +2,22 @@
 
 DiffGate is a research prototype.
 
-The current implementation is based on experiments conducted with:
+The current implementation is designed around experiments with:
 
-- Stable Diffusion 3.5 Large
-- 25 denoising steps
-- CFG scale 7.0
-- 1024x1024 resolution
+- Stable Diffusion 3.5 Large;
+- 25 denoising steps;
+- CFG scale 7.0;
+- 1024x1024 resolution;
+- prefix length 5.
 
 Performance may not transfer to:
 
-- other diffusion models,
-- other schedulers,
-- other guidance scales,
-- other prompt distributions.
+- other diffusion models;
+- other schedulers;
+- other guidance scales;
+- other prompt distributions;
+- other image resolutions.
 
-The supervised predictor was trained on automatically scored images and should not be interpreted as a replacement for human evaluation.
+The training-free score is heuristic. The supervised score depends on the training data and quality metric used to train the predictor.
 
-DiffGate should not be considered a production-quality quality-control system.
+DiffGate should not be considered a production quality-control system.

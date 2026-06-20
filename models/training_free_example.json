@@ -1,0 +1,25 @@
+{
+  "signal_weights": {
+    "latent_volatility_rms": 0.3,
+    "latent_update_cosine": 0.2,
+    "denoiser_pred_delta_rms": 0.15,
+    "denoiser_pred_cosine_prev": 0.2,
+    "denoising_update_pred_cosine": 0.35,
+    "cfg_alignment_cosine": 0.2,
+    "cfg_divergence_rms": 0.1,
+    "guided_minus_cond_rms": 0.05,
+    "latent_rms": -0.15,
+    "cfg_divergence_relative": -0.2,
+    "denoising_consistency_residual": -0.4
+  },
+  "summary_weights": {
+    "mean": 1.0,
+    "last": 0.75,
+    "slope": 0.5,
+    "max": 0.25,
+    "std": 0.25
+  },
+  "feature_stats": {},
+  "raw_score_min": null,
+  "raw_score_max": null
+}

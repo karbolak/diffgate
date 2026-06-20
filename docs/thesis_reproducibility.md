@@ -1,30 +1,27 @@
 # Thesis Reproducibility
 
-This repository accompanies the Bachelor thesis:
+DiffGate accompanies the Bachelor thesis:
 
-"Early Signals Predict Quality in Diffusion Image Generation"
+**Early Signals Predict Quality in Image Generation**
 
-University of Groningen
-BSc Artificial Intelligence
+Author: Kajetan Karbowski  
+Supervisor: Ivo De Jong  
+University of Groningen, BSc Artificial Intelligence
 
-Author:
-Kajetan Karbowski
+The thesis experiments used:
 
-Supervisor:
-Ivo De Jong
+- Stable Diffusion 3.5 Large;
+- 7,320 prompts;
+- 5 seeds per prompt;
+- 36,600 generated images;
+- 25 denoising steps;
+- CFG scale 7.0;
+- prefix length 5.
 
-The experiments used:
+Quality was evaluated with:
 
-- Stable Diffusion 3.5 Large
-- 7,320 prompts
-- 5 seeds per prompt
-- 36,600 generated images
-- Prefix length: 5 denoising steps
+- CLIP;
+- HPSv2;
+- ImageReward.
 
-Quality was evaluated using:
-
-- CLIP Score
-- HPSv2
-- ImageReward
-
-The repository provides an implementation of the trajectory-based selective continuation framework described in the thesis.
+DiffGate implements the trajectory recording and early gating mechanism used by the thesis. The saved supervised predictors and calibrated training-free statistics are not included by default; place them in `models/` and pass them through the CLI options described in `docs/cli.md`.

@@ -2,67 +2,62 @@
 
 **Early trajectory assessment and selective continuation for diffusion image generation.**
 
-DiffGate is an open-source research prototype that estimates image quality from the early stages of a diffusion trajectory and supports selective continuation through early-abort decisions.
+DiffGate is a research prototype that wraps Stable Diffusion 3.5 Large generation, records early denoising trajectory signals, computes a trajectory health score, and optionally aborts generation after a short prefix.
 
-The project accompanies a Bachelor thesis investigating whether information contained in the first few denoising steps of Stable Diffusion 3.5 Large can predict final image quality.
+It supports two recording modes:
 
----
+- `latent`: callback-only latent trajectory logging;
+- `rich`: thesis-faithful SD3.5 logging with latent, denoiser, classifier-free guidance, and consistency signals.
 
-## Motivation
+It supports two scoring modes:
 
-Diffusion models generate images through an iterative denoising process.
+- `training_free`: a hand-designed trajectory health score;
+- `supervised`: a saved sklearn-style prefix-quality predictor.
 
-Image quality is typically unknown until generation is complete, meaning that compute and user waiting time can be spent on trajectories that ultimately produce low-quality outputs.
-
-DiffGate explores whether generator-internal signals observed during the first few denoising steps can be used to:
-
-- estimate final image quality,
-- identify unpromising trajectories,
-- support early-abort decisions,
-- reduce unnecessary computation.
-
----
-
-## Features
-
-- Training-free trajectory health score
-- Supervised prefix-quality predictor
-- Early-abort decisions after a configurable denoising prefix
-- Stable Diffusion 3.5 Large integration
-- Trajectory logging and feature extraction
-- Reproducible research implementation
+DiffGate is released as a research and reproducibility artifact for a Bachelor thesis on early quality prediction in text-to-image diffusion. It is not a production-quality filtering system.
 
 ---
 
 ## Installation
 
-```bash
-pip install diffgate
-```
-
-Or install from source:
+For local development and unit tests:
 
 ```bash
-git clone https://github.com/karbolak/diffgate.git
-cd DiffGate
-pip install -e .
+python -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+pytest
 ```
+
+For real Stable Diffusion 3.5 generation:
+
+```bash
+pip install -e ".[sd35,supervised]"
+```
+
+The SD3.5 model weights are loaded locally through Hugging Face Diffusers. This is not an image-generation API call. A Hugging Face token may be required the first time if the model is gated.
 
 ---
 
-## Example
+## Python quickstart
 
 ```python
-from diffgate import EarlyAbortSD35
+from diffgate import DiffGateSD35
 
-pipe = EarlyAbortSD35.from_pretrained(
-    mode="training_free",
+gate = DiffGateSD35.from_pretrained(
+    record_mode="rich",
+    scorer="training_free",
     threshold=25,
+    prefix_steps=5,
+    device="cuda",
+    torch_dtype="float16",
 )
 
-result = pipe.generate(
+result = gate.generate(
     prompt="A red car on a snowy road",
     seed=12345,
+    abort=True,
+    return_trajectory=True,
 )
 
 print(result.health_score)
@@ -71,24 +66,67 @@ print(result.aborted)
 
 ---
 
+## CLI quickstart
+
+Training-free rich SD3.5 mode:
+
+```bash
+diffgate generate \
+  --prompt "A red car on a snowy road" \
+  --record-mode rich \
+  --scorer training_free \
+  --threshold 25 \
+  --seed 12345 \
+  --device cuda \
+  --torch-dtype float16 \
+  --output-dir outputs/example
+```
+
+Latent-only mode:
+
+```bash
+diffgate generate \
+  --prompt "A red car on a snowy road" \
+  --record-mode latent \
+  --scorer training_free \
+  --threshold 25 \
+  --device cuda
+```
+
+Score saved features without running generation:
+
+```bash
+diffgate score-features --features outputs/example/features.json
+```
+
+Extract features from saved signals:
+
+```bash
+diffgate extract-features \
+  --signals outputs/example/signals.json \
+  --prefix-steps 5 \
+  --output outputs/example/features_from_signals.json
+```
+
+See `docs/cli.md` and `docs/modes.md` for details.
+
+---
+
 ## Status
 
-DiffGate is a research prototype.
-
-The package is intended as a reproducibility artifact accompanying academic work. It should not be considered a fully validated production-quality filtering system.
+DiffGate is a research prototype. The default training-free score is usable as a diagnostic, but calibrated reproduction should use saved feature statistics from the thesis dataset. The supervised mode requires exported model artifacts.
 
 ---
 
 ## Citation
-
-If you use DiffGate, please cite:
 
 ```bibtex
 @software{karbowski2026diffgate,
   author = {Karbowski, Kajetan},
   title = {DiffGate},
   year = {2026},
-  url = {https://github.com/karbolak/diffgate}
+  url = {https://github.com/karbolak/DiffGate},
+  note = {Research prototype for early trajectory assessment in diffusion image generation}
 }
 ```
 

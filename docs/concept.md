@@ -1,15 +1,14 @@
 # DiffGate Concept
 
-DiffGate evaluates diffusion trajectories before image generation is complete.
+DiffGate treats a diffusion trajectory as something that can be inspected before image generation is complete.
 
-The underlying idea is that useful information about final image quality appears early in the denoising process.
+The central question is simple:
 
-Instead of waiting for a trajectory to finish, DiffGate extracts trajectory signals during the first few denoising steps and computes a quality estimate.
+> After the first few denoising steps, does this trajectory look worth continuing?
 
-Depending on the selected policy, the trajectory can then:
+DiffGate records internal trajectory signals, extracts compact prefix features, computes a health score, and then applies a gate:
 
-- continue normally,
-- be logged for analysis,
-- be aborted early.
+- continue generation;
+- or abort the trajectory early.
 
-DiffGate supports both a training-free trajectory health score and a supervised quality predictor.
+The package is designed around selective continuation, not post-hoc image ranking.

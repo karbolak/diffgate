@@ -5,55 +5,82 @@ description = "Early trajectory assessment and selective continuation for diffus
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
-
-authors = [
-    {name = "karbolak"}
-]
-
+authors = [{name = "Kajetan Karbowski"}]
 keywords = [
-    "diffusion",
-    "stable-diffusion",
-    "image-generation",
-    "quality-estimation",
-    "trajectory-analysis",
-    "early-abort"
+  "diffusion",
+  "stable-diffusion",
+  "image-generation",
+  "quality-estimation",
+  "trajectory-analysis",
+  "selective-continuation",
+  "early-abort",
 ]
-
 classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence"
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
-
 dependencies = [
-    "torch",
-    "diffusers",
-    "transformers",
-    "accelerate",
-    "safetensors",
-    "numpy",
-    "pandas",
-    "scikit-learn",
-    "joblib",
-    "pillow",
-    "tqdm"
+  "numpy>=1.24",
+  "pillow>=10.0",
 ]
 
 [project.optional-dependencies]
+sd35 = [
+  "torch",
+  "diffusers",
+  "transformers",
+  "accelerate",
+  "safetensors",
+]
+supervised = [
+  "scikit-learn",
+  "joblib",
+]
 dev = [
-    "pytest",
-    "ruff",
-    "black",
-    "mypy"
+  "pytest",
+  "ruff",
+  "black",
+  "mypy",
+]
+all = [
+  "torch",
+  "diffusers",
+  "transformers",
+  "accelerate",
+  "safetensors",
+  "scikit-learn",
+  "joblib",
+  "pytest",
 ]
 
 [project.urls]
 Homepage = "https://github.com/karbolak/diffgate"
 Repository = "https://github.com/karbolak/diffgate"
 
+[project.scripts]
+diffgate-generate = "diffgate.cli:main"
+diffgate = "diffgate.cli:main"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = [
+  "slow: tests that require large diffusion models or GPUs",
+]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.black]
+line-length = 100
